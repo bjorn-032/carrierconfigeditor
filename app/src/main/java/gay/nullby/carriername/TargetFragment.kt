@@ -8,7 +8,6 @@ import android.telephony.SubscriptionManager
 import android.telephony.TelephonyFrameworkInitializer
 import android.telephony.TelephonyManager
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +16,7 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.android.internal.telephony.ICarrierConfigLoader
 import gay.nullby.carriername.databinding.FragmentTargetBinding
 import rikka.shizuku.ShizukuBinderWrapper
@@ -81,6 +81,9 @@ class TargetFragment : Fragment() {
         var p = PersistableBundle();
         p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
         p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
+        p.putBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, false)
+        p.putBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, true)
+        p.putBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL, false) // disable video-calling
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING, /* trans rights! 🏳️‍⚧️*/ ":3")
         val subId: Int;
         if (selectedSub == 1) {
