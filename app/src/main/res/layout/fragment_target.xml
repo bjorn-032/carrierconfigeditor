@@ -36,14 +36,34 @@
 
             </RadioGroup>
 
-            <EditText
-                android:id="@+id/text_entry"
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Force Home Network"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Show Carrier Aggregation (4G+)"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Show video calling option in settings"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="hate crime"
-                android:inputType="text"
-                android:paddingTop="16dp" />
+                android:hint="Custom carrier name here...">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_entry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,6 +80,7 @@
                     android:text="Set" />
 
                 <Button
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:id="@+id/button_reset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

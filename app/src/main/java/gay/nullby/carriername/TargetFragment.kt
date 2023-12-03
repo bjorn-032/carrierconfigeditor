@@ -79,12 +79,35 @@ class TargetFragment : Fragment() {
     private fun onSetName(text: String) {
         Toast.makeText(context, "Set carrier vanity name to \"$text\"", Toast.LENGTH_SHORT).show()
         var p = PersistableBundle();
-        p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
-        p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
+//        p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
+//        p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
+
+        // See T-Mobile NL as roaming
+//        val stringArray = arrayOf("20416")
+//        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
         p.putBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, false)
         p.putBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, true)
-        p.putBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL, false) // disable video-calling
-        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING, /* trans rights! 🏳️‍⚧️*/ ":3")
+//        p.putBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL, false) // disable video-calling
+        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
+
+        /*
+            Show only the PLMN and not the SPN.
+
+            Example:
+            Telekom.de - Orange F
+              (PLMN)      (SPN)
+
+            PLMN = Public Land Mobile Network (HPLMN = Home PLMN)
+            SPN = Service Provider Name
+
+            -1 = default
+            0 = PLMN no, SPN no (Will show "No service")
+            1 = PLMN yes, SPN no
+            2 = PLMN no, SPN yes
+            3 = PLMN yes, SPN yes
+
+        */
+        p.putInt(CarrierConfigManager.KEY_SPN_DISPLAY_CONDITION_OVERRIDE_INT, 1)
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1!!
