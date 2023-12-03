@@ -1,6 +1,8 @@
 package gay.nullby.carriername
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.telephony.CarrierConfigManager
@@ -16,6 +18,7 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.android.internal.telephony.ICarrierConfigLoader
 import gay.nullby.carriername.databinding.FragmentTargetBinding
@@ -76,8 +79,47 @@ class TargetFragment : Fragment() {
         onSelectSub(0)
     }
 
+    private fun getPermission(): Boolean {
+        
+    }
+
+    private fun getCarrierConfig(key: String): String {
+        return false;
+    }
+
     private fun onSetName(text: String) {
         Toast.makeText(context, "Set carrier vanity name to \"$text\"", Toast.LENGTH_SHORT).show()
+
+
+
+        val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+
+        if (this.context?.let {
+                ActivityCompat.checkSelfPermission(
+                    it,
+                    Manifest.permission.READ_PHONE_STATE
+                )
+            } != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        }
+        if (telephonyManager != null) {
+            println(telephonyManager.carrierConfig.getBoolean(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING))
+        };
+
+
+
+
+
+
+
+
         var p = PersistableBundle();
 //        p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
 //        p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
@@ -145,6 +187,7 @@ class TargetFragment : Fragment() {
     private fun getCarrierNameBySubId(subId: Int): String {
         val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             ?: return ""
+
         return telephonyManager.getNetworkOperatorName(subId)
     }
 
