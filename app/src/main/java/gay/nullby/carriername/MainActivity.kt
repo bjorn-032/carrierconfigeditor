@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.annotation.RequiresApi
+import com.google.android.material.color.DynamicColors
 import gay.nullby.carriername.databinding.ActivityMainBinding
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
@@ -18,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        DynamicColors.applyToActivitiesIfAvailable(this.application);
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 

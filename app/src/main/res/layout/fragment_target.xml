@@ -16,23 +16,50 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="General Settings"
+                    />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Non-Roaming List"
+                    />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Roaming List"
+                    />
+            </com.google.android.material.tabs.TabLayout>
+
             <RadioGroup
                 android:id="@+id/sub_selection"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
 
                 <RadioButton
                     android:id="@+id/sub1_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    android:text="sub1" />
+                    android:text="SIM-Slot 1" />
 
                 <RadioButton
                     android:id="@+id/sub2_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="sub2" />
+                    android:text="SIM-Slot 2" />
 
             </RadioGroup>
 
