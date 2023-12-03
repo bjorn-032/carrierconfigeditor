@@ -63,19 +63,28 @@
             </LinearLayout>
 
             <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_force_home_network"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Force Home Network"/>
 
             <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_carrier_aggregation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Show Carrier Aggregation (4G+)"/>
+                android:text="Hide Carrier Aggregation (4G+)"/>
 
             <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_video_calling"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="Show video calling option in settings"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_prefer_2g"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Show 2G option in settings"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField"
