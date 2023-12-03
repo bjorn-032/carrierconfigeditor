@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="20dp"
+        android:layout_width="match_parent"
+        tools:ignore="MissingConstraints">
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_marginBottom="10dp"
+            android:text="Treat the following countries as non-roaming:" />
+
+        <CheckBox
+            android:id="@+id/checkbox_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkedState="indeterminate"
+            android:text="Europe - EU/EEA"/>
+
+        <LinearLayout
+            android:id="@+id/checkbox_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox_child_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Austria (232)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Belgium (206)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bulgaria (284)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Croatia (219)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cyprus (280)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Czech Republic (230)"/>
+
+
+            <CheckBox
+                android:id="@+id/checkbox_child_7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Denmark (238)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estonia (248)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Finland (244) (Includes Åland)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="France (208)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Germany (262)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Greece (202)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hungary (216)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Iceland (274)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ireland (272)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Italy (222)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Latvia (247)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_18"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Liechtenstein (295)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_19"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lithuania (246)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Luxembourg (270)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Malta (278)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Netherlands (204)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_23"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Norway (242)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_24"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Poland (260)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_25"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Portugal (268)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_26"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Romania (226)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_27"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Slovakia (231)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_28"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Slovenia (293)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_29"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Spain (214)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sweden (240)"/>
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkbox_parent_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkedState="indeterminate"
+            android:text="Rest of europe"/>
+
+        <LinearLayout
+            android:id="@+id/checkbox_container_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/checkbox_child_2_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="United Kingdom (234) (Includes Guernsey, Isle of Man, Jersey)"/>
+
+            <CheckBox
+                android:id="@+id/checkbox_child_2_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Switzerland (228)"/>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package gay.nullby.carriername
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -16,13 +17,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.android.internal.telephony.ICarrierConfigLoader
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import gay.nullby.carriername.databinding.FragmentTargetBinding
 import rikka.shizuku.ShizukuBinderWrapper
@@ -81,6 +83,53 @@ class TargetFragment : Fragment() {
 
         loadSwitches(view)
 
+        /*
+            Show only the PLMN and not the SPN.
+
+            Example:
+            Telekom.de - Orange F
+              (PLMN)      (SPN)
+
+            PLMN = Public Land Mobile Network (HPLMN = Home PLMN)
+            SPN = Service Provider Name
+
+            -1 = default
+            0 = PLMN no, SPN no (Will show "No service")
+            1 = PLMN yes, SPN no
+            2 = PLMN no, SPN yes
+            3 = PLMN yes, SPN yes
+
+        */
+
+        view.findViewById<LinearLayout>(R.id.list_spn).setOnClickListener{
+            val items = arrayOf(
+                "default",
+                "PLMN no, SPN no (No service)",
+                "PLMN yes, SPN no (Telekom.de)",
+                "PLMN no, SPN yes (Orange F)",
+                "PLMN yes, SPN yes (Telekom.de - Orange F)")
+
+            var spn = getCarrierConfigInt(CarrierConfigManager.KEY_SPN_DISPLAY_CONDITION_OVERRIDE_INT)
+            if (spn == null){
+                spn = -1
+            }
+            var checkedItem = spn + 1
+            context?.let { it1 ->
+                MaterialAlertDialogBuilder(it1)
+                    .setTitle("SPN display condition")
+                    .setSingleChoiceItems(items, checkedItem) { dialog, which ->
+                        checkedItem = which
+                    }
+                    .setNeutralButton("Cancel") { dialog, which ->
+                        // Do nothing
+                    }
+                    .setPositiveButton("Save") { dialog, which ->
+                        setCarrierConfigInt(CarrierConfigManager.KEY_SPN_DISPLAY_CONDITION_OVERRIDE_INT, checkedItem - 1)
+                    }
+                    .show()
+            }
+        }
+
         onSelectSub(0)
     }
 
@@ -106,6 +155,9 @@ class TargetFragment : Fragment() {
         }
         view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).setOnCheckedChangeListener {buttonView, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, isChecked)
+        }
+        view.findViewById<MaterialSwitch>(R.id.switch_roam_nl).setOnCheckedChangeListener {buttonView, isChecked ->
+            roamOn20416(isChecked)
         }
     }
 
@@ -150,6 +202,7 @@ class TargetFragment : Fragment() {
     private fun setCarrierConfigBoolean(key: String, bool: Boolean){
         var p = PersistableBundle();
         p.putBoolean(key, bool)
+        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1!!
@@ -159,38 +212,45 @@ class TargetFragment : Fragment() {
         overrideCarrierConfig(subId, p)
     }
 
+    private fun setCarrierConfigInt(key: String, num: Int){
+        var p = PersistableBundle();
+        p.putInt(key, num)
+        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
+        val subId: Int;
+        if (selectedSub == 1) {
+            subId = subId1!!
+        } else {
+            subId = subId2!!
+        }
+        overrideCarrierConfig(subId, p)
+    }
+
+    private fun roamOn20416(enable: Boolean){
+        var p = PersistableBundle();
+        // See T-Mobile NL as roaming
+        var stringArray = emptyArray<String>()
+        if(enable) {
+            stringArray = arrayOf("20416")
+        }
+        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
+        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
+        val subId: Int;
+        if (selectedSub == 1) {
+            subId = subId1!!
+        } else {
+            subId = subId2!!
+        }
+        overrideCarrierConfig(subId, p)
+    }
     private fun onSetName(text: String) {
         Toast.makeText(context, "Set carrier vanity name to \"$text\"", Toast.LENGTH_SHORT).show()
-
-        println(getCarrierConfigString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING))
-
         var p = PersistableBundle();
-//        p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
-//        p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
-
+        p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
+        p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
         // See T-Mobile NL as roaming
 //        val stringArray = arrayOf("20416")
 //        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
-
-        /*
-            Show only the PLMN and not the SPN.
-
-            Example:
-            Telekom.de - Orange F
-              (PLMN)      (SPN)
-
-            PLMN = Public Land Mobile Network (HPLMN = Home PLMN)
-            SPN = Service Provider Name
-
-            -1 = default
-            0 = PLMN no, SPN no (Will show "No service")
-            1 = PLMN yes, SPN no
-            2 = PLMN no, SPN yes
-            3 = PLMN yes, SPN yes
-
-        */
-        p.putInt(CarrierConfigManager.KEY_SPN_DISPLAY_CONDITION_OVERRIDE_INT, 1)
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1!!
