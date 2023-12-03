@@ -1,6 +1,7 @@
 package gay.nullby.carriername
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -19,8 +20,10 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.android.internal.telephony.ICarrierConfigLoader
+import com.google.android.material.materialswitch.MaterialSwitch
 import gay.nullby.carriername.databinding.FragmentTargetBinding
 import rikka.shizuku.ShizukuBinderWrapper
 
@@ -76,49 +79,90 @@ class TargetFragment : Fragment() {
 
         view.findViewById<RadioGroup>(R.id.sub_selection).setOnCheckedChangeListener { _, checkedId -> onSelectSub(checkedId) }
 
+        loadSwitches(view)
+
         onSelectSub(0)
     }
 
-    private fun getPermission(): Boolean {
-        
+    private fun loadSwitches(view: View) {
+        // Handle the switches
+        val forceHomeNetwork = getCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL)
+        val carrierAggregation = getCarrierConfigBoolean(CarrierConfigManager.KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL)
+        val videoCalling = getCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL)
+        val prefer2G = getCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL)
+        if(forceHomeNetwork != null){ view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).isChecked = forceHomeNetwork }
+        if(carrierAggregation != null){ view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).isChecked = carrierAggregation }
+        if(videoCalling != null){ view.findViewById<MaterialSwitch>(R.id.switch_video_calling).isChecked = videoCalling }
+        if(prefer2G != null){ view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).isChecked = prefer2G }
+
+        view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).setOnCheckedChangeListener {buttonView, isChecked ->
+            setCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, isChecked)
+        }
+        view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).setOnCheckedChangeListener {buttonView, isChecked ->
+            setCarrierConfigBoolean(CarrierConfigManager.KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL, isChecked)
+        }
+        view.findViewById<MaterialSwitch>(R.id.switch_video_calling).setOnCheckedChangeListener {buttonView, isChecked ->
+            setCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL, isChecked)
+        }
+        view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).setOnCheckedChangeListener {buttonView, isChecked ->
+            setCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, isChecked)
+        }
     }
 
-    private fun getCarrierConfig(key: String): String {
-        return false;
+    private fun getPermission(): Boolean {
+        val hasPermission = ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+        if (!hasPermission) {
+            // Permission is not granted
+            // Request the permission or handle the case where permission is denied
+            ActivityCompat.requestPermissions(this.activity!!, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
+            return ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+        }
+        return true;
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCarrierConfigString(key: String): String? {
+        if(getPermission()){
+            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            return telephonyManager?.carrierConfig?.getString(key);
+        }
+        return null
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCarrierConfigInt(key: String): Int? {
+        if(getPermission()){
+            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            return telephonyManager?.carrierConfig?.getInt(key);
+        }
+        return null
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCarrierConfigBoolean(key: String): Boolean? {
+        if(getPermission()){
+            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            return telephonyManager?.carrierConfig?.getBoolean(key);
+        }
+        return null
+    }
+
+    private fun setCarrierConfigBoolean(key: String, bool: Boolean){
+        var p = PersistableBundle();
+        p.putBoolean(key, bool)
+        val subId: Int;
+        if (selectedSub == 1) {
+            subId = subId1!!
+        } else {
+            subId = subId2!!
+        }
+        overrideCarrierConfig(subId, p)
     }
 
     private fun onSetName(text: String) {
         Toast.makeText(context, "Set carrier vanity name to \"$text\"", Toast.LENGTH_SHORT).show()
 
-
-
-        val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-
-        if (this.context?.let {
-                ActivityCompat.checkSelfPermission(
-                    it,
-                    Manifest.permission.READ_PHONE_STATE
-                )
-            } != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        }
-        if (telephonyManager != null) {
-            println(telephonyManager.carrierConfig.getBoolean(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING))
-        };
-
-
-
-
-
-
-
+        println(getCarrierConfigString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING))
 
         var p = PersistableBundle();
 //        p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
@@ -127,9 +171,6 @@ class TargetFragment : Fragment() {
         // See T-Mobile NL as roaming
 //        val stringArray = arrayOf("20416")
 //        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
-        p.putBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, false)
-        p.putBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, true)
-//        p.putBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL, false) // disable video-calling
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
 
         /*
@@ -172,6 +213,7 @@ class TargetFragment : Fragment() {
         // Sometimes just setting the override to null doesn't work, so let's first set another override, disabling the name change
         overrideCarrierConfig(subId, p)
         overrideCarrierConfig(subId, null)
+        this.view?.let { loadSwitches(it) }
     }
 
     private fun onSelectSub(id: Int) {
