@@ -3,7 +3,6 @@ package gay.nullby.carriername
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -232,7 +231,7 @@ class TargetFragment : Fragment() {
         if(enable) {
             stringArray = arrayOf("20416")
         }
-        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
+        p.putStringArray(CarrierConfigManager.KEY_ROAMING_OPERATOR_STRING_ARRAY, stringArray)
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
@@ -242,6 +241,7 @@ class TargetFragment : Fragment() {
         }
         overrideCarrierConfig(subId, p)
     }
+    @SuppressLint("MissingPermission")
     private fun onSetName(text: String) {
         Toast.makeText(context, "Set carrier vanity name to \"$text\"", Toast.LENGTH_SHORT).show()
         var p = PersistableBundle();
@@ -249,7 +249,7 @@ class TargetFragment : Fragment() {
         p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
         // See T-Mobile NL as roaming
 //        val stringArray = arrayOf("20416")
-//        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
+//        p.putStringArray(CarrierConfigManager.KEY_ROAMING_OPERATOR_STRING_ARRAY, stringArray)
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
