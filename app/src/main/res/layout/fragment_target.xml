@@ -88,7 +88,7 @@
                     android:id="@+id/switch_roam_nl"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Display roaming symbol (R) on 20416"
+                    android:text="Display roaming symbol (R) on 204 (NL)"
                     android:layout_marginVertical="8dp"
                     android:textSize="16sp" />
 
