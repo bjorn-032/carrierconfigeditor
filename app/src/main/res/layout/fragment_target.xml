@@ -121,6 +121,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/list_upload"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -133,7 +134,7 @@
                     android:id="@+id/textView4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Upload roaming config"
+                    android:text="Import roaming config"
                     android:textSize="16sp" />
 
                 <TextView
@@ -141,11 +142,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alpha="0.8"
-                    android:text="Upload a file which contains settings for which carriers and/or countries should be treated as roaming/non-roaming"
+                    android:text="Import a file which contains settings for which carriers and/or countries should be treated as roaming/non-roaming"
                     android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
