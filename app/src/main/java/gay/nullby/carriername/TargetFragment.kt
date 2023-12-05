@@ -116,13 +116,11 @@ class TargetFragment : Fragment() {
             context?.let { it1 ->
                 MaterialAlertDialogBuilder(it1)
                     .setTitle("SPN display condition")
-                    .setSingleChoiceItems(items, checkedItem) { dialog, which ->
+                    .setSingleChoiceItems(items, checkedItem) { _, which ->
                         checkedItem = which
                     }
-                    .setNeutralButton("Cancel") { dialog, which ->
-                        // Do nothing
-                    }
-                    .setPositiveButton("Save") { dialog, which ->
+                    .setNeutralButton("Cancel") { _, _ -> /* Do nothing */ }
+                    .setPositiveButton("Save") { _, _ ->
                         setCarrierConfigInt(CarrierConfigManager.KEY_SPN_DISPLAY_CONDITION_OVERRIDE_INT, checkedItem - 1)
                     }
                     .show()
@@ -143,19 +141,19 @@ class TargetFragment : Fragment() {
         if(videoCalling != null){ view.findViewById<MaterialSwitch>(R.id.switch_video_calling).isChecked = videoCalling }
         if(prefer2G != null){ view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).isChecked = prefer2G }
 
-        view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).setOnCheckedChangeListener {buttonView, isChecked ->
+        view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, isChecked)
         }
-        view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).setOnCheckedChangeListener {buttonView, isChecked ->
+        view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL, isChecked)
         }
-        view.findViewById<MaterialSwitch>(R.id.switch_video_calling).setOnCheckedChangeListener {buttonView, isChecked ->
+        view.findViewById<MaterialSwitch>(R.id.switch_video_calling).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL, isChecked)
         }
-        view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).setOnCheckedChangeListener {buttonView, isChecked ->
+        view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, isChecked)
         }
-        view.findViewById<MaterialSwitch>(R.id.switch_roam_nl).setOnCheckedChangeListener {buttonView, isChecked ->
+        view.findViewById<MaterialSwitch>(R.id.switch_roam_nl).setOnCheckedChangeListener {_, isChecked ->
             roamOn20416(isChecked)
         }
     }
@@ -204,9 +202,9 @@ class TargetFragment : Fragment() {
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
-            subId = subId1!!
+            subId = subId1
         } else {
-            subId = subId2!!
+            subId = subId2
         }
         overrideCarrierConfig(subId, p)
     }
@@ -217,9 +215,9 @@ class TargetFragment : Fragment() {
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
-            subId = subId1!!
+            subId = subId1
         } else {
-            subId = subId2!!
+            subId = subId2
         }
         overrideCarrierConfig(subId, p)
     }
@@ -235,13 +233,13 @@ class TargetFragment : Fragment() {
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
-            subId = subId1!!
+            subId = subId1
         } else {
-            subId = subId2!!
+            subId = subId2
         }
         overrideCarrierConfig(subId, p)
     }
-    @SuppressLint("MissingPermission")
+
     private fun onSetName(text: String) {
         Toast.makeText(context, "Set carrier vanity name to \"$text\"", Toast.LENGTH_SHORT).show()
         var p = PersistableBundle();
@@ -253,9 +251,9 @@ class TargetFragment : Fragment() {
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
-            subId = subId1!!
+            subId = subId1
         } else {
-            subId = subId2!!
+            subId = subId2
         }
         overrideCarrierConfig(subId, p)
     }
@@ -266,9 +264,9 @@ class TargetFragment : Fragment() {
         p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, "")
         val subId: Int;
         if (selectedSub == 1) {
-            subId = subId1!!
+            subId = subId1
         } else {
-            subId = subId2!!
+            subId = subId2
         }
         // Sometimes just setting the override to null doesn't work, so let's first set another override, disabling the name change
         overrideCarrierConfig(subId, p)
