@@ -133,7 +133,7 @@
                     android:id="@+id/textView4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Non-roaming networks"
+                    android:text="Upload roaming config"
                     android:textSize="16sp" />
 
                 <TextView
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alpha="0.8"
-                    android:text="Configure a list to override the platform's notion of a network operator being considered non-roaming"
+                    android:text="Upload a file which contains settings for which carriers and/or countries should be treated as roaming/non-roaming"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -158,7 +158,7 @@
                     android:id="@+id/textView6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Roaming networks"
+                    android:text="View roaming networks"
                     android:textSize="16sp" />
 
                 <TextView
@@ -166,7 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alpha="0.8"
-                    android:text="Configure a list to override the platform's notion of a network operator being considered roaming"
+                    android:text="View the list of countries and networks which will be considered roaming/non-roaming."
                     android:textSize="14sp" />
             </LinearLayout>
 

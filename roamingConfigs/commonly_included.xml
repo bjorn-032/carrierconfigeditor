@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<roaming_config>
+
+    <non_roaming>
+        <!-- Non-EU countries in Europe -->
+        <item value="276"/> <!-- Albania -->
+        <item value="213"/> <!-- Andorra -->
+        <item value="257"/> <!-- Belarus -->
+        <item value="218"/> <!-- Bosnia and Herzegovina -->
+        <item value="302"/> <!-- Canada -->
+        <item value="288"/> <!-- Faroe Islands -->
+        <item value="547"/> <!-- French Polynesia -->
+        <item value="266"/> <!-- Gibraltar -->
+        <item value="255"/> <!-- Moldova -->
+        <item value="212"/> <!-- Monaco -->
+        <item value="297"/> <!-- Montenegro -->
+        <item value="294"/> <!-- North Macedonia -->
+        <item value="250"/> <!-- Russia -->
+        <item value="292"/> <!-- San Marino -->
+        <item value="220"/> <!-- Serbia -->
+        <item value="228"/> <!-- Switzerland -->
+        <item value="286"/> <!-- Turkey -->
+        <item value="255"/> <!-- Ukraine -->
+        <item value="234"/> <!-- United Kingdom -->
+        <item value="310"/> <!-- United States of America -->
+    </non_roaming>
+
+    <roaming>
+
+        <!-- Guernsey & Jersey share the MCC with the UK the following lines will show an R in Guernsey & Jersey -->
+        <item value="23403"/> <!-- Airtel-Vodafone -->
+        <item value="23428"/> <!-- JT -->
+        <item value="23450"/> <!-- JT -->
+        <item value="23455"/> <!-- Sure Mobile -->
+
+        <!-- Isle of Man shares the MCC with the UK the following lines will show an R in Isle of Man -->
+        <item value="23418"/> <!-- Cloud 9 Mobile -->
+        <item value="23436"/> <!-- Sure Mobile -->
+        <item value="23458"/> <!-- Manx Telecom -->
+        <item value="23473"/> <!-- Bluewave Communications Ltd. -->
+
+    </roaming>
+
+</roaming_config>
