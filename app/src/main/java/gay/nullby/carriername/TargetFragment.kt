@@ -2,8 +2,11 @@ package gay.nullby.carriername
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.telephony.CarrierConfigManager
@@ -27,6 +30,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import gay.nullby.carriername.databinding.FragmentTargetBinding
 import rikka.shizuku.ShizukuBinderWrapper
+import java.io.InputStream
+
 
 class TargetFragment : Fragment() {
     private val TAG: String = "TargetFragment"
@@ -39,6 +44,7 @@ class TargetFragment : Fragment() {
     private var subId2: Int = -1;
 
     private var selectedSub: Int = 1;
+    val PICK_XML_FILE_REQUEST_CODE = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -127,6 +133,30 @@ class TargetFragment : Fragment() {
             }
         }
 
+        view.findViewById<LinearLayout>(R.id.list_upload).setOnClickListener {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.setType("text/xml")
+            startActivityForResult(intent, PICK_XML_FILE_REQUEST_CODE)
+        }
+
+        view.findViewById<LinearLayout>(R.id.list_view).setOnClickListener {
+            val nonroam = getCarrierConfigStringArray(CarrierConfigManager.KEY_NON_ROAMING_OPERATOR_STRING_ARRAY)?.joinToString(",")
+            val roam = getCarrierConfigStringArray(CarrierConfigManager.KEY_ROAMING_OPERATOR_STRING_ARRAY)?.joinToString(",")
+            println("Non roaming " + nonroam)
+            println("Roaming " + roam)
+
+            context?.let { it1 ->
+                MaterialAlertDialogBuilder(it1)
+                    .setTitle("Currently loaded roaming config")
+                    .setMessage("Non roaming: $nonroam\nRoaming: $roam")
+                    .setPositiveButton("Close") { _, _ ->
+                        // Do nothing
+                    }
+                    .show()
+            }
+        }
+
         onSelectSub(0)
     }
 
@@ -158,6 +188,37 @@ class TargetFragment : Fragment() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == PICK_XML_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                val uri = data.data
+                // Handle the selected XML file URI
+                processXmlFile(uri)
+            }
+        }
+    }
+
+    private fun processXmlFile(uri: Uri?) {
+        try {
+            uri?.let {
+                val inputStream: InputStream? = context?.contentResolver?.openInputStream(it)
+                var xmlparser = XMLParser()
+                if (inputStream != null) {
+                    var xml = xmlparser.parse(inputStream)
+                    val nonroam: Array<String> = xml.nonroam.items.toArray(arrayOfNulls<String>(0))
+                    val roam: Array<String> = xml.roam.items.toArray(arrayOfNulls<String>(0))
+                    setCarrierConfigStringArray(CarrierConfigManager.KEY_NON_ROAMING_OPERATOR_STRING_ARRAY, nonroam)
+                    setCarrierConfigStringArray(CarrierConfigManager.KEY_ROAMING_OPERATOR_STRING_ARRAY, roam)
+                } else {
+                    println("Error: no InputStream from file")
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+
     private fun getPermission(): Boolean {
         val hasPermission = ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
         if (!hasPermission) {
@@ -174,6 +235,15 @@ class TargetFragment : Fragment() {
         if(getPermission()){
             val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             return telephonyManager?.carrierConfig?.getString(key);
+        }
+        return null
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getCarrierConfigStringArray(key: String): Array<String>? {
+        if(getPermission()){
+            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            return telephonyManager?.carrierConfig?.getStringArray(key);
         }
         return null
     }
@@ -199,6 +269,19 @@ class TargetFragment : Fragment() {
     private fun setCarrierConfigBoolean(key: String, bool: Boolean){
         var p = PersistableBundle();
         p.putBoolean(key, bool)
+        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
+        val subId: Int;
+        if (selectedSub == 1) {
+            subId = subId1
+        } else {
+            subId = subId2
+        }
+        overrideCarrierConfig(subId, p)
+    }
+
+    private fun setCarrierConfigStringArray(key: String, stringArray: Array<String>){
+        var p = PersistableBundle();
+        p.putStringArray(key, stringArray)
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
