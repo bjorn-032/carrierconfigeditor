@@ -3,41 +3,41 @@
 
     <non_roaming>
         <!-- Non-EU countries in Europe -->
-        <item value="276"/> <!-- Albania -->
-        <item value="213"/> <!-- Andorra -->
-        <item value="257"/> <!-- Belarus -->
-        <item value="218"/> <!-- Bosnia and Herzegovina -->
-        <item value="302"/> <!-- Canada -->
-        <item value="288"/> <!-- Faroe Islands -->
-        <item value="547"/> <!-- French Polynesia -->
-        <item value="266"/> <!-- Gibraltar -->
-        <item value="255"/> <!-- Moldova -->
-        <item value="212"/> <!-- Monaco -->
-        <item value="297"/> <!-- Montenegro -->
-        <item value="294"/> <!-- North Macedonia -->
-        <item value="250"/> <!-- Russia -->
-        <item value="292"/> <!-- San Marino -->
-        <item value="220"/> <!-- Serbia -->
-        <item value="228"/> <!-- Switzerland -->
-        <item value="286"/> <!-- Turkey -->
-        <item value="255"/> <!-- Ukraine -->
-        <item value="234"/> <!-- United Kingdom -->
-        <item value="310"/> <!-- United States of America -->
+        <item>276</item> <!-- Albania -->
+        <item>213</item> <!-- Andorra -->
+        <item>257</item> <!-- Belarus -->
+        <item>218</item> <!-- Bosnia and Herzegovina -->
+        <item>302</item> <!-- Canada -->
+        <item>288</item> <!-- Faroe Islands -->
+        <item>547</item> <!-- French Polynesia -->
+        <item>266</item> <!-- Gibraltar -->
+        <item>255</item> <!-- Moldova -->
+        <item>212</item> <!-- Monaco -->
+        <item>297</item> <!-- Montenegro -->
+        <item>294</item> <!-- North Macedonia -->
+        <item>250</item> <!-- Russia -->
+        <item>292</item> <!-- San Marino -->
+        <item>220</item> <!-- Serbia -->
+        <item>228</item> <!-- Switzerland -->
+        <item>286</item> <!-- Turkey -->
+        <item>255</item> <!-- Ukraine -->
+        <item>234</item> <!-- United Kingdom -->
+        <item>310</item> <!-- United States of America -->
     </non_roaming>
 
     <roaming>
 
         <!-- Guernsey & Jersey share the MCC with the UK the following lines will show an R in Guernsey & Jersey -->
-        <item value="23403"/> <!-- Airtel-Vodafone -->
-        <item value="23428"/> <!-- JT -->
-        <item value="23450"/> <!-- JT -->
-        <item value="23455"/> <!-- Sure Mobile -->
+        <item>23403</item> <!-- Airtel-Vodafone -->
+        <item>23428</item> <!-- JT -->
+        <item>23450</item> <!-- JT -->
+        <item>23455</item> <!-- Sure Mobile -->
 
         <!-- Isle of Man shares the MCC with the UK the following lines will show an R in Isle of Man -->
-        <item value="23418"/> <!-- Cloud 9 Mobile -->
-        <item value="23436"/> <!-- Sure Mobile -->
-        <item value="23458"/> <!-- Manx Telecom -->
-        <item value="23473"/> <!-- Bluewave Communications Ltd. -->
+        <item>23418</item> <!-- Cloud 9 Mobile -->
+        <item>23436</item> <!-- Sure Mobile -->
+        <item>23458</item> <!-- Manx Telecom -->
+        <item>23473</item> <!-- Bluewave Communications Ltd. -->
 
     </roaming>
 

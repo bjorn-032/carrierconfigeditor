@@ -3,41 +3,41 @@
 
     <non_roaming>
         <!-- Standard EU countries + EEA countries -->
-        <item value="232"/> <!-- Austria -->
-        <item value="206"/> <!-- Belgium -->
-        <item value="284"/> <!-- Bulgaria -->
-        <item value="219"/> <!-- Croatia -->
-        <item value="280"/> <!-- Cyprus -->
-        <item value="230"/> <!-- Czech Republic -->
-        <item value="238"/> <!-- Denmark -->
-        <item value="248"/> <!-- Estonia -->
-        <item value="244"/> <!-- Finland (Åland shares the same MCC, but EU Roam Like Home don't apply there, exception added at the end of the file. ) -->
-        <item value="208"/> <!-- France -->
-        <item value="262"/> <!-- Germany -->
-        <item value="202"/> <!-- Greece -->
-        <item value="216"/> <!-- Hungary -->
-        <item value="274"/> <!-- Iceland -->
-        <item value="272"/> <!-- Ireland -->
-        <item value="222"/> <!-- Italy (Careful in Vatican City, Italian operators have towers in
+        <item>232</item> <!-- Austria -->
+        <item>206</item> <!-- Belgium -->
+        <item>284</item> <!-- Bulgaria -->
+        <item>219</item> <!-- Croatia -->
+        <item>280</item> <!-- Cyprus -->
+        <item>230</item> <!-- Czech Republic -->
+        <item>238</item> <!-- Denmark -->
+        <item>248</item> <!-- Estonia -->
+        <item>244</item> <!-- Finland -->
+        <item>208</item> <!-- Finland (Åland shares the same MCC, but EU Roam Like Home don't apply there, exception added at the end of the file. ) -->
+        <item>262</item> <!-- Germany -->
+        <item>202</item> <!-- Greece -->
+        <item>216</item> <!-- Hungary -->
+        <item>274</item> <!-- Iceland -->
+        <item>272</item> <!-- Ireland -->
+        <item>222</item> <!-- Italy (Careful in Vatican City, Italian operators have towers in
                                 vatican city and you can be charged for roaming outside of the EU) -->
-        <item value="247"/> <!-- Latvia -->
-        <item value="295"/> <!-- Liechtenstein -->
-        <item value="246"/> <!-- Lithuania -->
-        <item value="270"/> <!-- Luxembourg -->
-        <item value="278"/> <!-- Malta -->
-        <item value="204"/> <!-- Netherlands -->
-        <item value="242"/> <!-- Norway -->
-        <item value="260"/> <!-- Poland -->
-        <item value="268"/> <!-- Portugal -->
-        <item value="226"/> <!-- Romania -->
-        <item value="231"/> <!-- Slovakia -->
-        <item value="293"/> <!-- Slovenia -->
-        <item value="214"/> <!-- Spain -->
-        <item value="240"/> <!-- Sweden -->
+        <item>247</item> <!-- Latvia -->
+        <item>295</item> <!-- Liechtenstein -->
+        <item>246</item> <!-- Lithuania -->
+        <item>270</item> <!-- Luxembourg -->
+        <item>278</item> <!-- Malta -->
+        <item>204</item> <!-- Netherlands -->
+        <item>242</item> <!-- Norway -->
+        <item>260</item> <!-- Poland -->
+        <item>268</item> <!-- Portugal -->
+        <item>226</item> <!-- Romania -->
+        <item>231</item> <!-- Slovakia -->
+        <item>293</item> <!-- Slovenia -->
+        <item>214</item> <!-- Spain -->
+        <item>240</item> <!-- Sweden -->
 
         <!-- Outermost Regions (OMR) -->
-        <item value="647"/> <!-- (France) French Indian Ocean Territories (Reunion/Mayotte) -->
-        <item value="742"/> <!-- (France) French Guiana (Both MCC 742 and 340 belong to French Guiana) -->
+        <item>647</item> <!-- (France) French Indian Ocean Territories (Reunion/Mayotte) -->
+        <item>742</item> <!-- (France) French Guiana (Both MCC 742 and 340 belong to French Guiana) -->
 
         <!-- (France) French Antilles
             The French Antilles consists of 5 regions.
@@ -50,12 +50,12 @@
             it is technically not an outermost region, therefor 'roam like home' doesn't apply.
             Check with your operator.
           -->
-        <!--<item value="340"/>--> <!-- (France) French Antilles -->
+        <!--<item>340</item>--> <!-- (France) French Antilles -->
 
     </non_roaming>
 
     <roaming>
-        <item value="22414"/> <!-- Åland (Finland) - Ålcom, shares MCC with Finland but EU Roam Like Home doesn't apply. -->
+        <item>22414</item> <!-- Åland (Finland) - Ålcom, shares MCC with Finland but EU Roam Like Home doesn't apply. -->
     </roaming>
 
 </roaming_config>
