@@ -166,10 +166,13 @@ class TargetFragment : Fragment() {
         val carrierAggregation = getCarrierConfigBoolean(CarrierConfigManager.KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL)
         val videoCalling = getCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL)
         val prefer2G = getCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL)
+        val roamingFromServiceState = getCarrierConfigBoolean(CarrierConfigManager.KEY_SPN_DISPLAY_RULE_USE_ROAMING_FROM_SERVICE_STATE_BOOL)
+        println(roamingFromServiceState)
         if(forceHomeNetwork != null){ view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).isChecked = forceHomeNetwork }
         if(carrierAggregation != null){ view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).isChecked = carrierAggregation }
         if(videoCalling != null){ view.findViewById<MaterialSwitch>(R.id.switch_video_calling).isChecked = videoCalling }
         if(prefer2G != null){ view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).isChecked = prefer2G }
+        if(roamingFromServiceState != null){ view.findViewById<MaterialSwitch>(R.id.switch_roaming_for_service_state).isChecked = roamingFromServiceState }
 
         view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, isChecked)
@@ -183,8 +186,8 @@ class TargetFragment : Fragment() {
         view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, isChecked)
         }
-        view.findViewById<MaterialSwitch>(R.id.switch_roam_nl).setOnCheckedChangeListener {_, isChecked ->
-            roamOn20416(isChecked)
+        view.findViewById<MaterialSwitch>(R.id.switch_roaming_for_service_state).setOnCheckedChangeListener {_, isChecked ->
+            setCarrierConfigBoolean(CarrierConfigManager.KEY_SPN_DISPLAY_RULE_USE_ROAMING_FROM_SERVICE_STATE_BOOL, isChecked)
         }
     }
 
@@ -305,24 +308,6 @@ class TargetFragment : Fragment() {
         overrideCarrierConfig(subId, p)
     }
 
-    private fun roamOn20416(enable: Boolean){
-        var p = PersistableBundle();
-        // See T-Mobile NL as roaming
-        var stringArray = emptyArray<String>()
-        if(enable) {
-            stringArray = arrayOf("20416")
-        }
-        p.putStringArray(CarrierConfigManager.KEY_ROAMING_OPERATOR_STRING_ARRAY, stringArray)
-        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
-        val subId: Int;
-        if (selectedSub == 1) {
-            subId = subId1
-        } else {
-            subId = subId2
-        }
-        overrideCarrierConfig(subId, p)
-    }
-
     private fun onSetName(text: String) {
         Toast.makeText(context, "Set carrier vanity name to \"$text\"", Toast.LENGTH_SHORT).show()
         var p = PersistableBundle();
@@ -330,7 +315,7 @@ class TargetFragment : Fragment() {
         p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, text)
         // See T-Mobile NL as roaming
 //        val stringArray = arrayOf("20416")
-//        p.putStringArray(CarrierConfigManager.KEY_ROAMING_OPERATOR_STRING_ARRAY, stringArray)
+//        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
         p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
