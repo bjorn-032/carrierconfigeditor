@@ -77,11 +77,8 @@ class TargetFragment : Fragment() {
             view.findViewById<View>(R.id.sub2_button).visibility = View.GONE
         }
 
-        view.findViewById<Button>(R.id.button_set).setOnClickListener { onSetName(view.findViewById<EditText>(R.id.text_entry).text.toString()) }
-
         view.findViewById<Button>(R.id.button_reset).setOnClickListener {
-            onResetName()
-            view.findViewById<EditText>(R.id.text_entry).setText("")
+            onResetConfig()
         }
 
         view.findViewById<RadioGroup>(R.id.sub_selection).setOnCheckedChangeListener { _, checkedId -> onSelectSub(checkedId) }
@@ -133,6 +130,117 @@ class TargetFragment : Fragment() {
             }
         }
 
+        view.findViewById<LinearLayout>(R.id.list_signal_bar).setOnClickListener{
+            val items = arrayOf(
+                "None",
+                "RSRP",
+                "RSRQ",
+                "RSRP + RSRQ",
+                "RSSNR",
+                "RSSNR + RSRP",
+                "RSSNR + RSRQ",
+                "RSSNR + RSRP + RSRQ"
+            )
+            var res = getCarrierConfigInt(CarrierConfigManager.KEY_PARAMETERS_USED_FOR_LTE_SIGNAL_BAR_INT)
+            if (res == null){
+                res = 0
+            }
+            var checkedItem = res
+            context?.let { it1 ->
+                MaterialAlertDialogBuilder(it1)
+                    .setTitle("LTE signal bar configuration")
+                    .setSingleChoiceItems(items, checkedItem!!) { _, which ->
+                        checkedItem = which
+                    }
+                    .setNeutralButton("Cancel") { _, _ -> /* Do nothing */ }
+                    .setPositiveButton("Save") { _, _ ->
+                        setCarrierConfigInt(CarrierConfigManager.KEY_PARAMETERS_USED_FOR_LTE_SIGNAL_BAR_INT, checkedItem!!)
+                    }
+                    .show()
+            }
+        }
+
+        view.findViewById<LinearLayout>(R.id.list_carrier_name).setOnClickListener{
+            val inflater: LayoutInflater = LayoutInflater.from(context)
+            val view: View = inflater.inflate(R.layout.dialog_with_input_field, null)
+            val inputField: EditText = view.findViewById(R.id.editText)
+            var res = getCarrierConfigString(CarrierConfigManager.KEY_CARRIER_NAME_STRING)
+            if(res == null){
+                res = ""
+            }
+            inputField.setText(res)
+            inputField.hint = "Custom carrier name here..."
+            context?.let { it1 ->
+                MaterialAlertDialogBuilder(it1)
+                    .setTitle("Custom carrier name")
+                    .setView(view)
+                    .setNeutralButton("Cancel") { _, _ -> /* Do nothing */ }
+                    .setPositiveButton("Save") { _, _ ->
+                        val userInput = inputField.text.toString()
+                        onSetName(userInput)
+                    }
+                    .show()
+            }
+        }
+
+        view.findViewById<LinearLayout>(R.id.list_ehplmn).setOnClickListener{
+            val inflater: LayoutInflater = LayoutInflater.from(context)
+            val view: View = inflater.inflate(R.layout.dialog_with_input_field, null)
+            val inputField: EditText = view.findViewById(R.id.editText)
+            var res = getCarrierConfigStringArray(CarrierConfigManager.KEY_EHPLMN_OVERRIDE_STRING_ARRAY)?.joinToString(",")
+            if(res == null){
+                res = ""
+            }
+            inputField.setText(res)
+            inputField.hint = "Enter your MCC+MNC ids separated by a ','."
+            context?.let { it1 ->
+                MaterialAlertDialogBuilder(it1)
+                    .setTitle("Configure EHPLMN")
+                    .setView(view)
+                    .setNeutralButton("Cancel") { _, _ -> /* Do nothing */ }
+                    .setPositiveButton("Save") { _, _ ->
+                        val userInput = inputField.text.toString()
+                        var ids: Array<String>
+                        if(userInput.contains(",")){
+                            ids = userInput.split(",").toTypedArray()
+                        } else {
+                            ids = arrayOf(userInput)
+                        }
+                        setCarrierConfigStringArray(CarrierConfigManager.KEY_EHPLMN_OVERRIDE_STRING_ARRAY, ids)
+                    }
+                    .show()
+            }
+        }
+
+        view.findViewById<LinearLayout>(R.id.list_oplmn).setOnClickListener{
+            val inflater: LayoutInflater = LayoutInflater.from(context)
+            val view: View = inflater.inflate(R.layout.dialog_with_input_field, null)
+            val inputField: EditText = view.findViewById(R.id.editText)
+            var res = getCarrierConfigStringArray(CarrierConfigManager.KEY_OPL_OVERRIDE_STRING_ARRAY)?.joinToString(",")
+            if(res == null){
+                res = ""
+            }
+            inputField.setText(res)
+            inputField.hint = "Enter your MCC+MNC ids separated by a ','."
+            context?.let { it1 ->
+                MaterialAlertDialogBuilder(it1)
+                    .setTitle("Configure Operator PLMN")
+                    .setView(view)
+                    .setNeutralButton("Cancel") { _, _ -> /* Do nothing */ }
+                    .setPositiveButton("Save") { _, _ ->
+                        val userInput = inputField.text.toString()
+                        var ids: Array<String>
+                        if(userInput.contains(",")){
+                            ids = userInput.split(",").toTypedArray()
+                        } else {
+                            ids = arrayOf(userInput)
+                        }
+                        setCarrierConfigStringArray(CarrierConfigManager.KEY_OPL_OVERRIDE_STRING_ARRAY, ids)
+                    }
+                    .show()
+            }
+        }
+
         view.findViewById<LinearLayout>(R.id.list_upload).setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -143,8 +251,6 @@ class TargetFragment : Fragment() {
         view.findViewById<LinearLayout>(R.id.list_view).setOnClickListener {
             val nonroam = getCarrierConfigStringArray(CarrierConfigManager.KEY_NON_ROAMING_OPERATOR_STRING_ARRAY)?.joinToString(",")
             val roam = getCarrierConfigStringArray(CarrierConfigManager.KEY_ROAMING_OPERATOR_STRING_ARRAY)?.joinToString(",")
-            println("Non roaming " + nonroam)
-            println("Roaming " + roam)
 
             context?.let { it1 ->
                 MaterialAlertDialogBuilder(it1)
@@ -160,19 +266,40 @@ class TargetFragment : Fragment() {
         onSelectSub(0)
     }
 
+    /*
+
+    Usefull:
+    KEY_EHPLMN_OVERRIDE_STRING_ARRAY
+    KEY_OPL_OVERRIDE_STRING_ARRAY // Operator PLMN
+    KEY_ALLOW_ERI_BOOL // Enhanched roaming indicator
+
+
+     */
+    @SuppressLint("MissingPermission")
     private fun loadSwitches(view: View) {
         // Handle the switches
         val forceHomeNetwork = getCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL)
         val carrierAggregation = getCarrierConfigBoolean(CarrierConfigManager.KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL)
         val videoCalling = getCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL)
         val prefer2G = getCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL)
-        val roamingFromServiceState = getCarrierConfigBoolean(CarrierConfigManager.KEY_SPN_DISPLAY_RULE_USE_ROAMING_FROM_SERVICE_STATE_BOOL)
-        println(roamingFromServiceState)
         if(forceHomeNetwork != null){ view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).isChecked = forceHomeNetwork }
         if(carrierAggregation != null){ view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).isChecked = carrierAggregation }
         if(videoCalling != null){ view.findViewById<MaterialSwitch>(R.id.switch_video_calling).isChecked = videoCalling }
         if(prefer2G != null){ view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).isChecked = prefer2G }
-        if(roamingFromServiceState != null){ view.findViewById<MaterialSwitch>(R.id.switch_roaming_for_service_state).isChecked = roamingFromServiceState }
+
+        if(getPermission()){
+            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            println("B")
+            val lijst = telephonyManager?.carrierConfig?.getInt(CarrierConfigManager.KEY_PARAMETERS_USED_FOR_LTE_SIGNAL_BAR_INT);
+            println(lijst)
+//            if (lijst != null) {
+//                for (l in lijst) {
+//                    println(l)
+//                }
+//            }
+        } else {
+            println("No permission")
+        }
 
         view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, isChecked)
@@ -185,9 +312,6 @@ class TargetFragment : Fragment() {
         }
         view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, isChecked)
-        }
-        view.findViewById<MaterialSwitch>(R.id.switch_roaming_for_service_state).setOnCheckedChangeListener {_, isChecked ->
-            setCarrierConfigBoolean(CarrierConfigManager.KEY_SPN_DISPLAY_RULE_USE_ROAMING_FROM_SERVICE_STATE_BOOL, isChecked)
         }
     }
 
@@ -272,7 +396,6 @@ class TargetFragment : Fragment() {
     private fun setCarrierConfigBoolean(key: String, bool: Boolean){
         var p = PersistableBundle();
         p.putBoolean(key, bool)
-        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1
@@ -285,7 +408,6 @@ class TargetFragment : Fragment() {
     private fun setCarrierConfigStringArray(key: String, stringArray: Array<String>){
         var p = PersistableBundle();
         p.putStringArray(key, stringArray)
-        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1
@@ -298,7 +420,6 @@ class TargetFragment : Fragment() {
     private fun setCarrierConfigInt(key: String, num: Int){
         var p = PersistableBundle();
         p.putInt(key, num)
-        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1
@@ -316,7 +437,6 @@ class TargetFragment : Fragment() {
         // See T-Mobile NL as roaming
 //        val stringArray = arrayOf("20416")
 //        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
-        p.putString(CarrierConfigManager.KEY_CARRIER_CONFIG_VERSION_STRING,":3")
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1
@@ -326,7 +446,7 @@ class TargetFragment : Fragment() {
         overrideCarrierConfig(subId, p)
     }
 
-    private fun onResetName() {
+    private fun onResetConfig() {
         var p = PersistableBundle();
         p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, false)
         p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, "")
