@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<roaming_config>
+
+    <non_roaming>
+        <!-- Standard EU countries + EEA countries -->
+        <item>232</item> <!-- Austria -->
+        <item>206</item> <!-- Belgium -->
+        <item>284</item> <!-- Bulgaria -->
+        <item>219</item> <!-- Croatia -->
+        <item>280</item> <!-- Cyprus -->
+        <item>230</item> <!-- Czech Republic -->
+        <item>238</item> <!-- Denmark -->
+        <item>248</item> <!-- Estonia -->
+        <item>244</item> <!-- Finland -->
+        <item>208</item> <!-- Finland -->
+        <item>262</item> <!-- Germany -->
+        <item>202</item> <!-- Greece -->
+        <item>216</item> <!-- Hungary -->
+        <item>274</item> <!-- Iceland -->
+        <item>272</item> <!-- Ireland -->
+        <item>222</item> <!-- Italy -->
+        <item>247</item> <!-- Latvia -->
+        <item>295</item> <!-- Liechtenstein -->
+        <item>246</item> <!-- Lithuania -->
+        <item>270</item> <!-- Luxembourg -->
+        <item>278</item> <!-- Malta -->
+        <item>204</item> <!-- Netherlands -->
+        <item>242</item> <!-- Norway -->
+        <item>260</item> <!-- Poland -->
+        <item>268</item> <!-- Portugal -->
+        <item>226</item> <!-- Romania -->
+        <item>231</item> <!-- Slovakia -->
+        <item>293</item> <!-- Slovenia -->
+        <item>214</item> <!-- Spain -->
+        <item>240</item> <!-- Sweden -->
+
+        <!-- Outermost Regions (OMR) -->
+        <item>647</item> <!-- (France) French Indian Ocean Territories (Reunion/Mayotte) -->
+        <item>742</item> <!-- (France) French Guiana (Both MCC 742 and 340 belong to French Guiana) -->
+
+        <!-- (France) French Antilles
+            The French Antilles consists of 5 regions.
+            - Saint Barthélemy (NOT IN THE EU!!!!!)
+            - French Guiana (Outermost Region)
+            - Guadeloupe (Outermost Region)
+            - Saint Martin (French part) (Outermost Region)
+            - Martinique (Outermost Region)
+            Saint Barthélemy is part of French Antilles and shares the same MCC and operators, but
+            it is technically not an outermost region, therefor 'roam like home' doesn't apply.
+            Check with your operator.
+          -->
+        <!--<item>340</item>--> <!-- (France) French Antilles -->
+
+        <!-- Non-EU countries in Europe -->
+        <item>266</item> <!-- Gibraltar -->
+        <item>228</item> <!-- Switzerland -->
+        <item>234</item> <!-- United Kingdom -->
+    </non_roaming>
+
+    <roaming>
+        <!-- Guernsey & Jersey share the MCC with the UK the following lines will show an R in Guernsey & Jersey -->
+        <item>23403</item> <!-- Airtel-Vodafone -->
+        <item>23428</item> <!-- JT -->
+        <item>23450</item> <!-- JT -->
+        <item>23455</item> <!-- Sure Mobile -->
+
+        <!-- Isle of Man shares the MCC with the UK the following lines will show an R in Isle of Man -->
+        <item>23418</item> <!-- Cloud 9 Mobile -->
+        <item>23436</item> <!-- Sure Mobile -->
+        <item>23458</item> <!-- Manx Telecom -->
+        <item>23473</item> <!-- Bluewave Communications Ltd. -->
+    </roaming>
+
+</roaming_config>

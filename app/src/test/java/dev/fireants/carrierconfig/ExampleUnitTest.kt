@@ -1,4 +1,4 @@
-package gay.nullby.carriername
+package dev.fireants.carrierconfig
 
 import org.junit.Test
 
