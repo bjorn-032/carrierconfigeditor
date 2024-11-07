@@ -1,4 +1,4 @@
-package gay.nullby.carriername
+package dev.fireants.carrierconfig
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -28,7 +28,7 @@ import androidx.fragment.app.Fragment
 import com.android.internal.telephony.ICarrierConfigLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
-import gay.nullby.carriername.databinding.FragmentTargetBinding
+import dev.fireants.carrierconfig.databinding.FragmentTargetBinding
 import rikka.shizuku.ShizukuBinderWrapper
 import java.io.InputStream
 
@@ -45,6 +45,7 @@ class TargetFragment : Fragment() {
 
     private var selectedSub: Int = 1;
     val PICK_XML_FILE_REQUEST_CODE = 1
+    private lateinit var main_view : View;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +59,7 @@ class TargetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        main_view = view
 
         var _subId1: IntArray? = SubscriptionManager.getSubId(0);
         var _subId2: IntArray? = SubscriptionManager.getSubId(1);
@@ -84,6 +86,7 @@ class TargetFragment : Fragment() {
         view.findViewById<RadioGroup>(R.id.sub_selection).setOnCheckedChangeListener { _, checkedId -> onSelectSub(checkedId) }
 
         loadSwitches(view)
+        oncheckedSwitches(view)
 
         /*
             Show only the PLMN and not the SPN.
@@ -133,7 +136,7 @@ class TargetFragment : Fragment() {
         view.findViewById<LinearLayout>(R.id.list_signal_bar).setOnClickListener{
             val items = arrayOf(
                 "None",
-                "RSRP",
+                "RSRP (default)",
                 "RSRQ",
                 "RSRP + RSRQ",
                 "RSSNR",
@@ -269,38 +272,56 @@ class TargetFragment : Fragment() {
     /*
 
     Usefull:
-    KEY_EHPLMN_OVERRIDE_STRING_ARRAY
-    KEY_OPL_OVERRIDE_STRING_ARRAY // Operator PLMN
     KEY_ALLOW_ERI_BOOL // Enhanched roaming indicator
+    KEY_OPPORTUNISTIC_CARRIER_IDS_INT_ARRAY
+
 
 
      */
     @SuppressLint("MissingPermission")
     private fun loadSwitches(view: View) {
         // Handle the switches
-        val forceHomeNetwork = getCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL)
-        val carrierAggregation = getCarrierConfigBoolean(CarrierConfigManager.KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL)
-        val videoCalling = getCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL)
+        val forceHomeNetwork =
+            getCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL)
+        val carrierAggregation =
+            getCarrierConfigBoolean(CarrierConfigManager.KEY_HIDE_LTE_PLUS_DATA_ICON_BOOL)
+        val videoCalling =
+            getCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_VT_AVAILABLE_BOOL)
         val prefer2G = getCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL)
-        if(forceHomeNetwork != null){ view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).isChecked = forceHomeNetwork }
-        if(carrierAggregation != null){ view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).isChecked = carrierAggregation }
-        if(videoCalling != null){ view.findViewById<MaterialSwitch>(R.id.switch_video_calling).isChecked = videoCalling }
-        if(prefer2G != null){ view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).isChecked = prefer2G }
-
-        if(getPermission()){
-            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-            println("B")
-            val lijst = telephonyManager?.carrierConfig?.getInt(CarrierConfigManager.KEY_PARAMETERS_USED_FOR_LTE_SIGNAL_BAR_INT);
-            println(lijst)
-//            if (lijst != null) {
-//                for (l in lijst) {
-//                    println(l)
-//                }
-//            }
-        } else {
-            println("No permission")
+        val spn_display_service_state =
+            getCarrierConfigBoolean(CarrierConfigManager.KEY_SPN_DISPLAY_RULE_USE_ROAMING_FROM_SERVICE_STATE_BOOL)
+        val name_resolver =
+            getCarrierConfigBoolean(CarrierConfigManager.KEY_ENABLE_CARRIER_DISPLAY_NAME_RESOLVER_BOOL)
+        val empty_name =
+            getCarrierConfigString(CarrierConfigManager.KEY_CARRIER_NAME_STRING).equals("") and (getCarrierConfigBoolean(
+                CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL
+            ) == true)
+        if (forceHomeNetwork != null) {
+            view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).isChecked =
+                forceHomeNetwork
         }
-
+        if (carrierAggregation != null) {
+            view.findViewById<MaterialSwitch>(R.id.switch_carrier_aggregation).isChecked =
+                carrierAggregation
+        }
+        if (videoCalling != null) {
+            view.findViewById<MaterialSwitch>(R.id.switch_video_calling).isChecked = videoCalling
+        }
+        if (prefer2G != null) {
+            view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).isChecked = prefer2G
+        }
+        if (spn_display_service_state != null) {
+            view.findViewById<MaterialSwitch>(R.id.switch_spn_display_service_state).isChecked =
+                spn_display_service_state
+        }
+        if (name_resolver != null) {
+            view.findViewById<MaterialSwitch>(R.id.switch_name_resolver).isChecked = name_resolver
+        }
+        if (empty_name != null) {
+            view.findViewById<MaterialSwitch>(R.id.switch_empty_name).isChecked = empty_name
+        }
+    }
+    private fun oncheckedSwitches(view: View){
         view.findViewById<MaterialSwitch>(R.id.switch_force_home_network).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_FORCE_HOME_NETWORK_BOOL, isChecked)
         }
@@ -312,6 +333,24 @@ class TargetFragment : Fragment() {
         }
         view.findViewById<MaterialSwitch>(R.id.switch_prefer_2g).setOnCheckedChangeListener {_, isChecked ->
             setCarrierConfigBoolean(CarrierConfigManager.KEY_PREFER_2G_BOOL, isChecked)
+        }
+
+        view.findViewById<MaterialSwitch>(R.id.switch_spn_display_service_state).setOnCheckedChangeListener {_, isChecked ->
+            setCarrierConfigBoolean(CarrierConfigManager.KEY_SPN_DISPLAY_RULE_USE_ROAMING_FROM_SERVICE_STATE_BOOL, isChecked)
+        }
+
+        view.findViewById<MaterialSwitch>(R.id.switch_name_resolver).setOnCheckedChangeListener {_, isChecked ->
+                setCarrierConfigBoolean(CarrierConfigManager.KEY_ENABLE_CARRIER_DISPLAY_NAME_RESOLVER_BOOL, isChecked)
+        }
+
+        view.findViewById<MaterialSwitch>(R.id.switch_empty_name).setOnCheckedChangeListener {_, isChecked ->
+            if(isChecked){
+                setCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, true)
+                setCarrierConfigString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, "")
+            } else {
+                setCarrierConfigBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, false)
+                setCarrierConfigString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, "")
+            }
         }
     }
 
@@ -361,7 +400,7 @@ class TargetFragment : Fragment() {
     private fun getCarrierConfigString(key: String): String? {
         if(getPermission()){
             val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-            return telephonyManager?.carrierConfig?.getString(key);
+            return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getString(key);
         }
         return null
     }
@@ -370,7 +409,7 @@ class TargetFragment : Fragment() {
     private fun getCarrierConfigStringArray(key: String): Array<String>? {
         if(getPermission()){
             val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-            return telephonyManager?.carrierConfig?.getStringArray(key);
+            return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getStringArray(key);
         }
         return null
     }
@@ -379,7 +418,7 @@ class TargetFragment : Fragment() {
     private fun getCarrierConfigInt(key: String): Int? {
         if(getPermission()){
             val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-            return telephonyManager?.carrierConfig?.getInt(key);
+            return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getInt(key);
         }
         return null
     }
@@ -388,44 +427,45 @@ class TargetFragment : Fragment() {
     private fun getCarrierConfigBoolean(key: String): Boolean? {
         if(getPermission()){
             val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
-            return telephonyManager?.carrierConfig?.getBoolean(key);
+            return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getBoolean(key);
         }
         return null
     }
 
-    private fun setCarrierConfigBoolean(key: String, bool: Boolean){
-        var p = PersistableBundle();
-        p.putBoolean(key, bool)
+    private fun getSubId() : Int {
         val subId: Int;
         if (selectedSub == 1) {
             subId = subId1
         } else {
             subId = subId2
         }
+        return subId
+    }
+    private fun setCarrierConfigBoolean(key: String, bool: Boolean){
+        var p = PersistableBundle();
+        p.putBoolean(key, bool)
+        val subId = getSubId()
+        overrideCarrierConfig(subId, p)
+    }
+
+    private fun setCarrierConfigString(key: String, string: String){
+        var p = PersistableBundle();
+        p.putString(key, string)
+        val subId = getSubId()
         overrideCarrierConfig(subId, p)
     }
 
     private fun setCarrierConfigStringArray(key: String, stringArray: Array<String>){
         var p = PersistableBundle();
         p.putStringArray(key, stringArray)
-        val subId: Int;
-        if (selectedSub == 1) {
-            subId = subId1
-        } else {
-            subId = subId2
-        }
+        val subId = getSubId()
         overrideCarrierConfig(subId, p)
     }
 
     private fun setCarrierConfigInt(key: String, num: Int){
         var p = PersistableBundle();
         p.putInt(key, num)
-        val subId: Int;
-        if (selectedSub == 1) {
-            subId = subId1
-        } else {
-            subId = subId2
-        }
+        val subId = getSubId()
         overrideCarrierConfig(subId, p)
     }
 
@@ -437,12 +477,7 @@ class TargetFragment : Fragment() {
         // See T-Mobile NL as roaming
 //        val stringArray = arrayOf("20416")
 //        p.putStringArray(CarrierConfigManager.KEY_GSM_ROAMING_NETWORKS_STRING_ARRAY, stringArray)
-        val subId: Int;
-        if (selectedSub == 1) {
-            subId = subId1
-        } else {
-            subId = subId2
-        }
+        val subId = getSubId()
         overrideCarrierConfig(subId, p)
     }
 
@@ -450,12 +485,7 @@ class TargetFragment : Fragment() {
         var p = PersistableBundle();
         p.putBoolean(CarrierConfigManager.KEY_CARRIER_NAME_OVERRIDE_BOOL, false)
         p.putString(CarrierConfigManager.KEY_CARRIER_NAME_STRING, "")
-        val subId: Int;
-        if (selectedSub == 1) {
-            subId = subId1
-        } else {
-            subId = subId2
-        }
+        val subId = getSubId()
         // Sometimes just setting the override to null doesn't work, so let's first set another override, disabling the name change
         overrideCarrierConfig(subId, p)
         overrideCarrierConfig(subId, null)
@@ -465,9 +495,11 @@ class TargetFragment : Fragment() {
     private fun onSelectSub(id: Int) {
         if (id == R.id.sub1_button || id == 0) {
             selectedSub = 1;
+            loadSwitches(main_view) 
             Toast.makeText(context, "Selected Network 1", Toast.LENGTH_SHORT).show()
         } else if (id == R.id.sub2_button) {
             selectedSub = 2;
+            loadSwitches(main_view)
             Toast.makeText(context, "Selected Network 2", Toast.LENGTH_SHORT).show()
         }
     }

@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'gay.nullby.carriername'
-    compileSdk 33
+    namespace 'dev.fireants.carrierconfig'
+    compileSdk 35
 
     defaultConfig {
-        applicationId "gay.nullby.carriername"
+        applicationId 'dev.fireants.carrierconfig'
         minSdk 28
-        targetSdk 33
+        targetSdk 35
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,6 +44,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
     implementation 'com.google.android.material:material:1.9.0'
+    implementation files('/home/bjorn/Android/hidden-api/framework.jar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -53,4 +54,5 @@ dependencies {
     implementation "dev.rikka.shizuku:provider:$shizuku_version"
 
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+
 }

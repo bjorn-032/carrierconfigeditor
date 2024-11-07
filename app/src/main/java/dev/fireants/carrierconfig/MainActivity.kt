@@ -1,6 +1,5 @@
-package gay.nullby.carriername
+package dev.fireants.carrierconfig
 
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -8,9 +7,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.annotation.RequiresApi
 import com.google.android.material.color.DynamicColors
-import gay.nullby.carriername.databinding.ActivityMainBinding
+import dev.fireants.carrierconfig.databinding.ActivityMainBinding
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class MainActivity : AppCompatActivity() {

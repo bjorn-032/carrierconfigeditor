@@ -1,4 +1,4 @@
-package gay.nullby.carriername
+package dev.fireants.carrierconfig
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

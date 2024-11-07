@@ -84,6 +84,30 @@
                     android:layout_marginVertical="8dp"
                     android:textSize="15sp" />
 
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_spn_display_service_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="SPN Display rule use roaming from service state"
+                    android:layout_marginVertical="8dp"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_name_resolver"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Enable carrier display name resolver"
+                    android:layout_marginVertical="8dp"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_empty_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Set empty name"
+                    android:layout_marginVertical="8dp"
+                    android:textSize="15sp" />
+
             </LinearLayout>
 
             <LinearLayout

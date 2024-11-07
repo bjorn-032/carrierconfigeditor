@@ -1,4 +1,4 @@
-package gay.nullby.carriername
+package dev.fireants.carrierconfig
 
 import android.util.Xml
 import org.xmlpull.v1.XmlPullParser
