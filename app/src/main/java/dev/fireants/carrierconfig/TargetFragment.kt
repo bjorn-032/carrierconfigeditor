@@ -219,26 +219,21 @@ class TargetFragment : Fragment() {
             val inflater: LayoutInflater = LayoutInflater.from(context)
             val view: View = inflater.inflate(R.layout.dialog_with_input_field, null)
             val inputField: EditText = view.findViewById(R.id.editText)
-            var res = getCarrierConfigStringArray(CarrierConfigManager.KEY_OPL_OVERRIDE_STRING_ARRAY)?.joinToString(",")
-            if(res == null){
-                res = ""
-            }
-            inputField.setText(res)
-            inputField.hint = "Enter your MCC+MNC ids separated by a ','."
+            val existingOPL = getCarrierConfigStringArray(CarrierConfigManager.KEY_OPL_OVERRIDE_STRING_ARRAY)
+            val existingOPLString = existingOPL?.joinToString(";") ?: ""
+
+            inputField.setText(existingOPLString)
+
             context?.let { it1 ->
                 MaterialAlertDialogBuilder(it1)
                     .setTitle("Configure Operator PLMN")
+                    .setMessage("Enter Operator PLMN records (plmn,lactac_start,lactac_end,index) seperated by a ';'. \n For example: '27001,0,65535,0' (Post LU - All LAC's - Index 0)")
                     .setView(view)
                     .setNeutralButton("Cancel") { _, _ -> /* Do nothing */ }
                     .setPositiveButton("Save") { _, _ ->
-                        val userInput = inputField.text.toString()
-                        var ids: Array<String>
-                        if(userInput.contains(",")){
-                            ids = userInput.split(",").toTypedArray()
-                        } else {
-                            ids = arrayOf(userInput)
-                        }
-                        setCarrierConfigStringArray(CarrierConfigManager.KEY_OPL_OVERRIDE_STRING_ARRAY, ids)
+                        val userInput = inputField.text.toString().trim()
+                        val oplRecords: Array<String> = userInput.split(";").map { it.trim() }.filter { it.isNotEmpty() }.toTypedArray()
+                        setCarrierConfigStringArray(CarrierConfigManager.KEY_OPL_OVERRIDE_STRING_ARRAY, oplRecords)
                     }
                     .show()
             }
