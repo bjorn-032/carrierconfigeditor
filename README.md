@@ -9,3 +9,4 @@ The app uses [Shizuku](https://shizuku.rikka.app/) to achieve this using carrier
 **WARNING**: Anything using Shizuku might potentially cause harm to your device (and the data on it). I'm not responsible for any damage that might be caused by this app.
 You have been warned.
 
+**Note**: This app does not work on any android device with the October 2025 security patch (or later) installed.
