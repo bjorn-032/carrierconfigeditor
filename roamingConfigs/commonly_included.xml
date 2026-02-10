@@ -11,22 +11,18 @@
         <item>288</item> <!-- Faroe Islands -->
         <item>547</item> <!-- French Polynesia -->
         <item>266</item> <!-- Gibraltar -->
-        <item>255</item> <!-- Moldova -->
         <item>212</item> <!-- Monaco -->
         <item>297</item> <!-- Montenegro -->
         <item>294</item> <!-- North Macedonia -->
         <item>250</item> <!-- Russia -->
-        <item>292</item> <!-- San Marino -->
         <item>220</item> <!-- Serbia -->
         <item>228</item> <!-- Switzerland -->
         <item>286</item> <!-- Turkey -->
-        <item>255</item> <!-- Ukraine -->
         <item>234</item> <!-- United Kingdom -->
         <item>310</item> <!-- United States of America -->
     </non_roaming>
 
     <roaming>
-
         <!-- Guernsey & Jersey share the MCC with the UK the following lines will show an R in Guernsey & Jersey -->
         <item>23403</item> <!-- Airtel-Vodafone -->
         <item>23428</item> <!-- JT -->
@@ -38,7 +34,6 @@
         <item>23436</item> <!-- Sure Mobile -->
         <item>23458</item> <!-- Manx Telecom -->
         <item>23473</item> <!-- Bluewave Communications Ltd. -->
-
     </roaming>
 
 </roaming_config>

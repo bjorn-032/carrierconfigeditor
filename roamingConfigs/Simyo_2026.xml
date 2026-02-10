@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<!-- This config is for the MVNO Ben (NL) with MCC-MNC 204-16 -->
+<!-- This config is for the MVNO Simyo (NL) with MCC-MNC 204-08 -->
 <roaming_config>
 
     <non_roaming>
@@ -25,6 +25,7 @@
         <item>246</item> <!-- Lithuania -->
         <item>270</item> <!-- Luxembourg -->
         <item>278</item> <!-- Malta -->
+        <item>259</item> <!-- Moldova -->
         <item>204</item> <!-- Netherlands -->
         <item>242</item> <!-- Norway -->
         <item>260</item> <!-- Poland -->
@@ -34,6 +35,7 @@
         <item>293</item> <!-- Slovenia -->
         <item>214</item> <!-- Spain -->
         <item>240</item> <!-- Sweden -->
+        <item>255</item> <!-- Ukraine -->
 
         <!-- Outermost Regions (OMR) -->
         <item>647</item> <!-- (France) French Indian Ocean Territories (Reunion/Mayotte) -->
@@ -45,9 +47,8 @@
         <item>288</item> <!-- Faroe Islands -->
         <item>266</item> <!-- Gibraltar -->
         <item>212</item> <!-- Monaco -->
-        <item>292</item> <!-- San Marino -->
+        <item>228</item> <!-- Switzerland -->
         <item>234</item> <!-- United Kingdom -->
-
     </non_roaming>
 
     <roaming>
