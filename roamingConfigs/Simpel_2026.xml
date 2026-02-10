@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!-- This config is for the MVNO Simpel with MCC-MNC 204-16 -->
 <roaming_config>
 
     <non_roaming>
@@ -18,7 +19,7 @@
         <item>216</item> <!-- Hungary -->
         <item>274</item> <!-- Iceland -->
         <item>272</item> <!-- Ireland -->
-        <item>222</item> <!-- Italy (Includes Vatican city and San Marino, they do not have their own mobile network) -->
+        <item>222</item> <!-- Italy -->
         <item>247</item> <!-- Latvia -->
         <item>295</item> <!-- Liechtenstein -->
         <item>246</item> <!-- Lithuania -->
@@ -39,27 +40,20 @@
         <!-- Outermost Regions (OMR) -->
         <item>647</item> <!-- (France) French Indian Ocean Territories (Reunion/Mayotte) -->
         <item>742</item> <!-- (France) French Guiana (Both MCC 742 and 340 belong to French Guiana) -->
+        <item>340</item> <!-- (France) French Antilles -->
 
-        <!-- (France) French Antilles
-            The French Antilles consists of 5 regions.
-            - Saint Barthélemy (NOT IN THE EU!!!!!)
-            - French Guiana (Outermost Region)
-            - Guadeloupe (Outermost Region)
-            - Saint Martin (French part) (Outermost Region)
-            - Martinique (Outermost Region)
-            Saint Barthélemy is part of French Antilles and shares the same MCC and operators, but
-            it is technically not an outermost region, therefor 'roam like home' doesn't apply.
-            Check with your operator.
-          -->
-        <!--<item>340</item>--> <!-- (France) French Antilles -->
+        <!-- Non EU countries -->
+        <item>213</item> <!-- Andorra -->
+        <item>288</item> <!-- Faroe Islands -->
+        <item>266</item> <!-- Gibraltar -->
+        <item>212</item> <!-- Monaco -->
+        <item>228</item> <!-- Switzerland -->
+        <item>234</item> <!-- United Kingdom -->
 
     </non_roaming>
 
     <roaming>
-        <!-- You can add networks here that you explicitly want to exclude. For example, you can allow France (<item>208</item>), but exclude Orange F here (<item>20801</item>). -->
-	
-	<!-- North Sea / TampNet (uses Norway's MCC, but is not considered EU roaming) -->
-	<item>24299</item> <!-- TampNet -->
+        <!-- Nothing here -->
     </roaming>
 
 </roaming_config>
