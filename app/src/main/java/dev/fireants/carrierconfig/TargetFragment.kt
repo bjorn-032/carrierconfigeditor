@@ -515,16 +515,7 @@ class TargetFragment : Fragment() {
                     .get()
             )
         )
-
-        try {
-            carrierConfigLoader.overrideConfig(subId, p, true)
-        } catch (e: SecurityException) {
-            if (e.message?.contains("overrideConfig with persistent=true only can be invoked by system app") == true) {
-                carrierConfigLoader.overrideConfig(subId, p, false)
-            } else {
-                throw e
-            }
-        }
+        carrierConfigLoader.overrideConfig(subId, p, false)
     }
 
     override fun onDestroyView() {
