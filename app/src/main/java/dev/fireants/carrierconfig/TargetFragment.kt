@@ -29,6 +29,7 @@ import com.android.internal.telephony.ICarrierConfigLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import dev.fireants.carrierconfig.databinding.FragmentTargetBinding
+import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuBinderWrapper
 import java.io.InputStream
 
@@ -243,6 +244,7 @@ class TargetFragment : Fragment() {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.setType("text/xml")
+            @Suppress("DEPRECATION")
             startActivityForResult(intent, PICK_XML_FILE_REQUEST_CODE)
         }
 
@@ -269,8 +271,6 @@ class TargetFragment : Fragment() {
     Usefull:
     KEY_ALLOW_ERI_BOOL // Enhanched roaming indicator
     KEY_OPPORTUNISTIC_CARRIER_IDS_INT_ARRAY
-
-
 
      */
     @SuppressLint("MissingPermission")
@@ -335,7 +335,7 @@ class TargetFragment : Fragment() {
         }
 
         view.findViewById<MaterialSwitch>(R.id.switch_name_resolver).setOnCheckedChangeListener {_, isChecked ->
-                setCarrierConfigBoolean(CarrierConfigManager.KEY_ENABLE_CARRIER_DISPLAY_NAME_RESOLVER_BOOL, isChecked)
+            setCarrierConfigBoolean(CarrierConfigManager.KEY_ENABLE_CARRIER_DISPLAY_NAME_RESOLVER_BOOL, isChecked)
         }
 
         view.findViewById<MaterialSwitch>(R.id.switch_empty_name).setOnCheckedChangeListener {_, isChecked ->
@@ -381,12 +381,12 @@ class TargetFragment : Fragment() {
 
 
     private fun getPermission(): Boolean {
-        val hasPermission = ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+        val hasPermission = ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
         if (!hasPermission) {
             // Permission is not granted
             // Request the permission or handle the case where permission is denied
-            ActivityCompat.requestPermissions(this.activity!!, arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
-            return ActivityCompat.checkSelfPermission(this.context!!, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+            ActivityCompat.requestPermissions(this.requireActivity(), arrayOf(Manifest.permission.READ_PHONE_STATE), 1)
+            return ActivityCompat.checkSelfPermission(this.requireContext(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
         }
         return true;
     }
@@ -394,7 +394,7 @@ class TargetFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun getCarrierConfigString(key: String): String? {
         if(getPermission()){
-            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getString(key);
         }
         return null
@@ -403,7 +403,7 @@ class TargetFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun getCarrierConfigStringArray(key: String): Array<String>? {
         if(getPermission()){
-            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getStringArray(key);
         }
         return null
@@ -412,7 +412,7 @@ class TargetFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun getCarrierConfigInt(key: String): Int? {
         if(getPermission()){
-            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getInt(key);
         }
         return null
@@ -421,7 +421,7 @@ class TargetFragment : Fragment() {
     @SuppressLint("MissingPermission")
     private fun getCarrierConfigBoolean(key: String): Boolean? {
         if(getPermission()){
-            val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+            val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             return telephonyManager?.createForSubscriptionId(getSubId())?.carrierConfig?.getBoolean(key);
         }
         return null
@@ -500,13 +500,39 @@ class TargetFragment : Fragment() {
     }
 
     private fun getCarrierNameBySubId(subId: Int): String {
-        val telephonyManager = context!!.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
+        val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager
             ?: return ""
 
         return telephonyManager.getNetworkOperatorName(subId)
     }
 
     private fun overrideCarrierConfig(subId: Int, p: PersistableBundle?) {
+        try {
+            // Fast path: works on older patches
+            overrideCarrierConfigDirect(subId, p)
+        } catch (e: SecurityException) {
+            Log.w(TAG, "Direct overrideConfig blocked (post-Oct 2025 patch): ${e.message}. Falling back to Instrumentation path.")
+            try {
+                overrideCarrierConfigViaInstrumentation(subId, p)
+            } catch (e2: Exception) {
+                Log.e(TAG, "Instrumentation path also failed: ${e2.message}", e2)
+                activity?.runOnUiThread {
+                    Toast.makeText(
+                        context,
+                        "Failed to apply config: ${e2.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "overrideCarrierConfig failed: ${e.message}", e)
+            activity?.runOnUiThread {
+                Toast.makeText(context, "Failed to apply config: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun overrideCarrierConfigDirect(subId: Int, p: PersistableBundle?) {
         val carrierConfigLoader = ICarrierConfigLoader.Stub.asInterface(
             ShizukuBinderWrapper(
                 TelephonyFrameworkInitializer
@@ -516,6 +542,46 @@ class TargetFragment : Fragment() {
             )
         )
         carrierConfigLoader.overrideConfig(subId, p, false)
+    }
+
+    private fun overrideCarrierConfigViaInstrumentation(subId: Int, p: PersistableBundle?) {
+
+        val bundleArg = serializeBundleForInstrumentation(p)
+        val pkg = requireContext().packageName
+
+        val cmd = if (p == null) {
+            "am instrument -w -e subId $subId -e bundle null $pkg/.CarrierConfigInstrumentation"
+        } else {
+            "am instrument -w -e subId $subId -e bundle ${bundleArg.replace(" ", "_SPACE_")} $pkg/.CarrierConfigInstrumentation"
+        }
+
+        Log.d(TAG, "Running instrumentation: $cmd")
+
+        val process = Shizuku.newProcess(arrayOf("sh", "-c", cmd), null, null)
+        val exitCode = process.waitFor()
+        if (exitCode != 0) {
+            val stderr = process.errorStream.bufferedReader().readText()
+            throw RuntimeException("am instrument exited with code $exitCode: $stderr")
+        }
+    }
+
+    private fun serializeBundleForInstrumentation(p: PersistableBundle?): String {
+        if (p == null) return "null"
+        val parts = mutableListOf<String>()
+        for (key in p.keySet()) {
+            when (val v = p.get(key)) {
+                is Boolean -> parts.add("$key=bool:$v")
+                is Int     -> parts.add("$key=int:$v")
+                is String  -> parts.add("$key=string:${v.replace(",", "\\,").replace("=", "\\=")}")
+                is Array<*> -> {
+                    @Suppress("UNCHECKED_CAST")
+                    val arr = v as Array<String>
+                    parts.add("$key=stringArray:${arr.joinToString("|") { it.replace("|", "\\|") }}")
+                }
+                else -> Log.w(TAG, "Unsupported bundle value type for key $key: ${v?.javaClass}")
+            }
+        }
+        return parts.joinToString(",")
     }
 
     override fun onDestroyView() {
